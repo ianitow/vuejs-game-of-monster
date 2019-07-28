@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600&display=swap" rel="stylesheet">
+
+    <title>Projeto 01 - Matador de Monstros - VUEJS</title>
+    <script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+    <div id="app" style="width:50%; margin:0 auto;">
+        <h1 style="text-align:center">Game of Monster</h1>
+        <span style="text-align:center; margin-bottom:10px;">ATTACK THE MONSTER AND WIN THE GAME!!!</span>
+        <div class="panel scores">
+            <div id="player">
+                <img src="./assets/player/mage.webp" alt="">
+                <h1>Jogador</h1>
+                <div class="life-bar">
+                    <div class="life-inner" :class="{danger:playerData.life < 20}"
+                        :style="{width:playerData.life + '%'}">
+
+                    </div>
+                    <span> Health: {{playerData.life}} %</span>
+                </div>
+
+                <div class="mana-bar">
+                    <div class="mana-inner" :style="{width:playerData.mana + '%'}">
+
+                    </div>
+                    <span> Mana: {{playerData.mana}} %</span>
+                </div>
+            </div>
+            <div id="monster">
+                <img src="./assets/monster/monster.gif" alt="">
+                <h1>Monstro </h1>
+                <div class="life-bar">
+                    <div class="life-inner" :class="{danger:monsterData.life < 20}"
+                        :style="{width:monsterData.life + '%'}">
+
+                    </div>
+                    <span>Health: {{monsterData.life}} %</span>
+                </div>
+                <div class="mana-bar">
+                    <div class="mana-inner" :style="{width:monsterData.mana + '%'}">
+
+                    </div>
+                    <span> Mana: {{monsterData.mana}} %</span>
+                </div>
+
+            </div>
+
+        </div>
+        <div v-if="hasResult" class="panel result">
+            <div v-if="monsterData.life == 0 && playerData.life > 0" class="win">😊<br>Você ganhou, parabéns.
+                {{playerData.name}}</div>
+            <div v-if="playerData.life == 0 && monsterData.life > 0 " class="lose"> 😥<br>Você perdeu, que azar.
+                {{playerData.name}}</div>
+            <div v-else-if="playerData.life == 0 && monsterData.life == 0 ">EMPATE!!!</div>
+            {{endGame()}}
+        </div>
+        <div class="panel buttons">
+            <h2 v-if="running">Inventory</h2>
+            <button @click="startGame()" v-if="!running" class="btn new-game">Iniciar Jogo</button>
+
+            <div class="btnOptions" v-else>
+
+                <button @click="playerAttack()" class="btn attack"> <img src="./assets/attack.png" alt=""
+                        srcset="">Ataque</button>
+                <button class="btn special-attack" @click="panelMageOpened = !panelMageOpened"> <img
+                        src="./assets/magic.png" alt="" srcset="">Magias</button>
+
+                <button @click="playerHeal()" class="btn heal"> <img src="./assets/heal.png">Curar</button>
+                <button @click="playerMana()" class="btn mana"><img src="./assets/mana.png" alt="">Recuperar
+                    Mana</button>
+                <button class="btn give-up" @click="endGame()"><img src="./assets/give-up.png" alt=""
+                        srcset="">Desistir</button>
+            </div>
+            <div v-if="panelMageOpened" class="panel mage-options">
+
+                <template v-for="(ability,index) in playerData.abilitys">
+                    <button @click="playerUseSpell(index,$event)" :data-id="index"> <img
+                            :src="ability.path"><span>{{ability.name}}</span></button>
+
+                </template>
+            </div>
+
+
+        </div>
+        <div v-if="running" class="panel logs">
+            <h2>Logs</h2>
+            <ul class="logs-details">
+                <li v-for="log in logs" :class="log.classe">{{log.message}}</li>
+            </ul>
+        </div>
+    </div>
+    <script src="./js/app.js"></script>
+</body>
+
+</html>

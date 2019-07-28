@@ -1,4 +1,4 @@
-# Foobar
+# Description
 
 A game made with VueJS for training my skills...
 
